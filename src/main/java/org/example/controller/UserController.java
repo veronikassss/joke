@@ -32,7 +32,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ErrorResponce("Login is already exists", 409));
         }
-
         try {
             User newUser = new User(userDTO.getLogin(), LocalDateTime.now());
             defaultUserRepository.saveUser(newUser);

@@ -1,44 +1,34 @@
 package org.example.controller;
 
-import org.example.exception.JokeServiceException;
-import org.example.models.Joke;
-import org.example.models.User;
-import org.example.repository.DefaultUserRepository;
-import org.example.service.JokeService;
+import org.example.service.GetJokeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class JokesController {
 
-    private JokeService jokeService;
-    private DefaultUserRepository defaultUserRepository;
+    private final GetJokeService getJokeService;
 
-    public JokesController(JokeService jokeService, DefaultUserRepository defaultUserRepository) {
-        this.jokeService = jokeService;
-        this.defaultUserRepository = defaultUserRepository;
+    public JokesController(GetJokeService getJokeService) {
+        this.getJokeService = getJokeService;
     }
 
-//    @GetMapping("/joke")
-//    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login) {
-//        try {
-//            User user = defaultUserRepository.findOrCreate(login);
-//            Joke joke = jokeService.getJoke();
-//            user.addViewJokeId(joke.getId());
-//
-//            return ResponseEntity.ok(joke);
-//
-//        } catch (JokeServiceException e) {
-//            throw e;
-//        }
-//    }
+    @GetMapping("/joke")
+    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login) {
+        String joke = getJokeService.getJokeAndSaveOrFindUser(login);
+
+        return ResponseEntity.ok(joke);
+    }
 
     @GetMapping("/history")
     public ResponseEntity<?>  history(@RequestHeader("X-User-Login") String login) {
-            Set<Long> jokesIdOfUser = defaultUserRepository.history(login);
+            List<Long> jokesIdOfUser = getJokeService.getUserHistory(login);
 
             return ResponseEntity.ok(jokesIdOfUser);
     }

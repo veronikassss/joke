@@ -3,11 +3,14 @@ package org.example.repository;
 import org.example.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class DefaultUserHistoryRepository implements UserHistoryRepository {
 
     private final ConcurrentHashMap<String, List<Long>> historyMap = new ConcurrentHashMap<>();

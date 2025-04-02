@@ -3,13 +3,14 @@ package org.example.repository;
 import org.example.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
+@Component
 public class DefaultUserRepository implements UserRepository {
     private final ConcurrentHashMap<String, User> usersMap = new ConcurrentHashMap<>();
     private final Logger logger = LoggerFactory.getLogger(DefaultUserRepository.class);
