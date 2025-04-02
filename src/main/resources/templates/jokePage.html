@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Случайный анекдот</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .joke-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .joke-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .refresh-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="joke-container">
+    <h1>Ваш ежедневный анекдот 😄</h1>
+
+    <!-- Отображаем шутку или сообщение об ошибке -->
+    <div th:if="${joke != null}"
+         class="joke-text"
+         th:utext="${joke}"></div>
+
+    <div th:if="${joke == null}"
+         class="error-message">
+        Не удалось загрузить анекдот. Попробуйте позже!
+    </div>
+
+    <!-- Кнопка для обновления страницы -->
+    <button class="refresh-button" onclick="location.reload()">
+        Ещё один!
+    </button>
+</div>
+</body>
+</html>
