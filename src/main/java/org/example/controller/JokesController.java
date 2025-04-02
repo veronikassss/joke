@@ -1,19 +1,13 @@
 package org.example.controller;
 
-import jakarta.validation.Valid;
-import org.example.ErrorResponce;
 import org.example.exception.JokeServiceException;
-import org.example.SuccessResponce;
 import org.example.models.Joke;
 import org.example.models.User;
-import org.example.models.UserDTO;
-import org.example.repository.UserRepository;
+import org.example.repository.DefaultUserRepository;
 import org.example.service.JokeService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @RestController
@@ -21,30 +15,30 @@ import java.util.Set;
 public class JokesController {
 
     private JokeService jokeService;
-    private UserRepository userRepository;
+    private DefaultUserRepository defaultUserRepository;
 
-    public JokesController(JokeService jokeService, UserRepository userRepository) {
+    public JokesController(JokeService jokeService, DefaultUserRepository defaultUserRepository) {
         this.jokeService = jokeService;
-        this.userRepository = userRepository;
+        this.defaultUserRepository = defaultUserRepository;
     }
 
-    @GetMapping("/joke")
-    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login) {
-        try {
-            User user = userRepository.findOrCreate(login);
-            Joke joke = jokeService.getJoke();
-            user.addViewJokeId(joke.getId());
-
-            return ResponseEntity.ok(joke);
-
-        } catch (JokeServiceException e) {
-            throw e;
-        }
-    }
+//    @GetMapping("/joke")
+//    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login) {
+//        try {
+//            User user = defaultUserRepository.findOrCreate(login);
+//            Joke joke = jokeService.getJoke();
+//            user.addViewJokeId(joke.getId());
+//
+//            return ResponseEntity.ok(joke);
+//
+//        } catch (JokeServiceException e) {
+//            throw e;
+//        }
+//    }
 
     @GetMapping("/history")
     public ResponseEntity<?>  history(@RequestHeader("X-User-Login") String login) {
-            Set<Long> jokesIdOfUser = userRepository.history(login);
+            Set<Long> jokesIdOfUser = defaultUserRepository.history(login);
 
             return ResponseEntity.ok(jokesIdOfUser);
     }
