@@ -35,7 +35,6 @@ public class DefaultUserRepository implements UserRepository {
         User oldUser = usersMap.get(login);
         if (oldUser == null) {
             logger.warn("user not found");
-            throw new IllegalArgumentException("user not found");
         }
             return oldUser;
     }

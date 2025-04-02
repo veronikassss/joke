@@ -3,9 +3,12 @@ package org.example.controller;
 import jakarta.validation.Valid;
 import org.example.ErrorResponce;
 import org.example.SuccessResponce;
+import org.example.exception.UserAlreadyExistsException;
+import org.example.exception.UserServiceException;
 import org.example.models.User;
 import org.example.models.UserDTO;
 import org.example.repository.DefaultUserRepository;
+import org.example.service.GetRegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,28 +20,30 @@ import java.time.LocalDateTime;
 
 public class UserController {
 
-    private DefaultUserRepository defaultUserRepository;
+    private final GetRegisterService getRegisterService;
 
-    public UserController(DefaultUserRepository defaultUserRepository) {
-        this.defaultUserRepository = defaultUserRepository;
+    public UserController(GetRegisterService getRegisterService) {
+        this.getRegisterService = getRegisterService;
     }
 
     @PostMapping("api/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO) {
-        String login = userDTO.getLogin();
+        try {
+            getRegisterService.registerUserOrReject(userDTO);
 
-        if (defaultUserRepository.existsByLogin(login)) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new SuccessResponce(
+                            "User created",
+                            userDTO.getLogin(),
+                            LocalDateTime.now()
+                    ));
+
+        } catch (UserAlreadyExistsException e) {
 
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ErrorResponce("Login is already exists", 409));
-        }
-        try {
-            User newUser = new User(userDTO.getLogin(), LocalDateTime.now());
-            defaultUserRepository.saveUser(newUser);
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new SuccessResponce("User created", newUser.getLogin(), newUser.getRegisteredAt()));
-        } catch (IllegalArgumentException e) {
+        } catch (UserServiceException | IllegalArgumentException e) {
 
             return ResponseEntity.badRequest()
                     .body(new ErrorResponce(e.getMessage(), 400));
