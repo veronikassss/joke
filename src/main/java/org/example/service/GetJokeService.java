@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.example.exception.JokeServiceException;
+import org.example.exception.LoginAbsenceException;
+import org.example.exception.PasswordAbsenceException;
 import org.example.exception.PasswordDontMatchException;
 import org.example.models.Joke;
 import org.example.models.User;
@@ -39,7 +41,12 @@ public class GetJokeService {
 
         if (login == null || login.isEmpty()) {
             logger.warn("login is null or empty in the method getJokeAndSaveOrFindUser ");
-            throw new IllegalArgumentException("user login cannot be null");
+            throw new LoginAbsenceException("Login required");
+        }
+
+        if (password == null || password.isEmpty()) {
+            logger.warn("password is null or empty in the method getJokeAndSaveOrFindUser ");
+            throw new PasswordAbsenceException("Password required");
         }
 
         User user = defaultUserRepository.find(login);
