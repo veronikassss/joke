@@ -29,7 +29,7 @@ public class GetRegisterService {
             }
 
         try {
-            User newUser = new User(userDTO.getLogin(), LocalDateTime.now());
+            User newUser = new User(userDTO.getLogin(),userDTO.getPassword(), LocalDateTime.now());
             defaultUserRepository.saveUser(newUser);
             logger.info("user was saved in method registerUserOrReject");
         } catch (IllegalArgumentException e) {

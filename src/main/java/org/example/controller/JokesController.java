@@ -20,15 +20,17 @@ public class JokesController {
     }
 
     @GetMapping("/joke")
-    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login) {
-        String joke = getJokeService.getJokeAndSaveOrFindUser(login);
+    public ResponseEntity<?> getJoke(@RequestHeader("X-User-Login") String login,
+                                     @RequestHeader("X-User-Password") String password) {
+        String joke = getJokeService.getJokeAndSaveOrFindUser(login, password);
 
         return ResponseEntity.ok(joke);
     }
 
     @GetMapping("/history")
-    public ResponseEntity<?>  history(@RequestHeader("X-User-Login") String login) {
-            List<Long> jokesIdOfUser = getJokeService.getUserHistory(login);
+    public ResponseEntity<?>  history(@RequestHeader("X-User-Login") String login,
+                                      @RequestHeader("X-User-Password") String password) {
+            List<Long> jokesIdOfUser = getJokeService.getUserHistory(login, password);
 
             return ResponseEntity.ok(jokesIdOfUser);
     }

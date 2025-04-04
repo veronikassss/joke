@@ -22,11 +22,13 @@ public class DefaultUserRepository implements UserRepository {
             throw new NullPointerException("user is null");
         }
         String userLogin = user.getLogin();
+        String userPassword = user.getPassword();
         if (userLogin == null || userLogin.isEmpty()) {
             logger.warn("userLogin is null or empty");
             throw new IllegalArgumentException("user login cannot be null");
         }
-        usersMap.putIfAbsent(userLogin, user);
+        User newUser = new User(userLogin, userPassword, LocalDateTime.now());
+        usersMap.putIfAbsent(userLogin, newUser);
         logger.info("save user " + userLogin);
     }
 

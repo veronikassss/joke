@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.exception.JokeServiceException;
+import org.example.exception.PasswordDontMatchException;
 import org.example.models.Joke;
 import org.example.models.User;
 import org.example.repository.DefaultUserHistoryRepository;
@@ -29,7 +30,7 @@ public class GetJokeService {
         this.jokeService = jokeService;
     }
 
-    public String getJokeAndSaveOrFindUser(String login) {
+    public String getJokeAndSaveOrFindUser(String login, String password) {
         Joke joke = jokeService.getJoke();
         if (joke == null) {
             logger.warn("problem with getting joke");
@@ -42,9 +43,15 @@ public class GetJokeService {
         }
 
         User user = defaultUserRepository.find(login);
+
+        if (!user.getPassword().equals(password)) {
+            logger.warn("password don't match");
+            throw new PasswordDontMatchException("password don't match");
+        }
+
         if (user == null) {
             logger.warn("user not found. we will save a new one");
-            user = new User(login, LocalDateTime.now());
+            user = new User(login,password, LocalDateTime.now());
             defaultUserRepository.saveUser(user);
             logger.info("saved user");
         }
@@ -53,7 +60,7 @@ public class GetJokeService {
         return joke.getText();
     }
 
-    public List<Long> getUserHistory(String login) {
+    public List<Long> getUserHistory(String login, String password) {
         if (login == null || login.isEmpty()) {
             logger.warn("login is null or empty in method getUserHistory");
             throw new IllegalArgumentException("user login cannot be null");

@@ -15,9 +15,16 @@ public class User {
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Допустимы только символы a-z и 0-9")
     private String login;
     private final LocalDateTime registeredAt;
+    private String password;
 
     public User(String login, LocalDateTime registeredAt) {
         this.login = login;
         this.registeredAt = registeredAt;
+    }
+
+    public User(String login,String password, LocalDateTime registeredAt) {
+        this.login = login;
+        this.registeredAt = registeredAt;
+        this.password = password;
     }
 }

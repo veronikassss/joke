@@ -13,4 +13,8 @@ public class UserDTO {
     @Size(min = 3, max = 20, message = "Имя должно содержать от 3 до 20 символов")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Допустимы только символы a-z и 0-9")
     private String login;
+    @NotEmpty(message = "Пароль не может быть пустым")
+    @Size(min = 1, max = 20, message = "Пароль должен содержать от 1 до 20 символов")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Допустимы только символы a-z и 0-9")
+    private String password;
 }
